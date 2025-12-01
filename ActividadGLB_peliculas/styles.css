@@ -1,0 +1,131 @@
+/* ======== ESTILO GENERAL ======== */
+body {
+    font-family: Arial, sans-serif;
+    background: #0c0c0c;
+    color: #ddd;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #ffe81f;
+    text-shadow: 0 0 15px #ffe81f;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #ffe81f;
+    margin-top: 0;
+}
+
+/* ======== CONTENEDOR ======== */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 232, 31, 0.2);
+    margin-bottom: 30px;
+}
+
+/* ======== FORMULARIOS ======== */
+.form-row {
+    margin-bottom: 15px;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+}
+
+input {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+}
+
+.form-buttons {
+    margin-top: 10px;
+}
+
+.secondary {
+    background: #444 !important;
+    color: #eee !important;
+}
+
+.secondary:hover {
+    background: #666 !important;
+}
+
+/* ======== TABLAS ======== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+}
+
+th {
+    background: #222;
+    color: #ffe81f;
+    text-transform: uppercase;
+    border-bottom: 2px solid #ffe81f;
+}
+
+tr {
+    background: #1a1a1a;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+tr:hover {
+    background: #272727;
+}
+
+td {
+    border-bottom: 1px solid #333;
+}
+
+/* ======== BOTONES ======== */
+button {
+    padding: 10px 18px;
+    color: black;
+    background: #ffe81f;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+    margin-right: 8px;
+}
+
+button:hover {
+    background: #fff14d;
+    box-shadow: 0 0 10px #ffe81f;
+}
+
+/* ===== POPUP ===== */
+#votingPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(255, 232, 31, 0.4);
+    width: 300px;
+    display: none;
+}
+
+#votingPopup h3 {
+    color: #ffe81f;
+    margin-top: 0;
+}

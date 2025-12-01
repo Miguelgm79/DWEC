@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad 1</title>
+</head>
+<body>
+    <!--Actividad 2.1-->
+    <script>
+        function ejer1() {
+            alert("Hola mundo js")
+        }
+    </script>
+    <!--Actividad 2.2-->
+    <script>
+
+    </script>
+    <!--Actividad 2.3-->
+    <script>
+        function ejer2() {
+            let num1 = 3
+            let num2 = 2
+            let resultado = num1 / num2
+            console.log(resultado);
+            
+        }
+    </script>
+    <!--Actividad 2.4-->
+    <script>
+        function ejer3() {
+            nombre = prompt("Introduce tu nombre")
+            edad = prompt("Introduce tu edad")
+
+            let dias = edad*365
+            console.log(nombre+"has vivido: "+dias);
+            
+        }
+    </script>
+    <!--Actividad 2.5-->
+    <script>
+        function ejer4() {
+            num = prompt("Dime un numero")
+            let doble = num*2
+            let triple = num*3
+            let cuadr = num*4
+
+            console.log(doble);
+            console.log(triple);
+            console.log(cuadr);
+
+        }
+    </script>
+    <!--Actividad 2.6-->
+    <!--Calcula el area de un cuadrado-->
+    <script>
+        var a, b;
+        a= prompt("Escribe la base:")
+        b= prompt("Escribe la altura:")
+        alert("Area= " +(a*b/2));
+        
+
+    </script>
+    <!--Actividad 2.7-->
+    <!--L=2πr-->
+    <script>
+        function ejer7() {
+            radio = prompt("indicame el radio:")
+            let area = π * (radio * radio)
+            let perimetro = radio * 2 * π
+            console.log("el area es de: "+area +"y el perimetro es de: "+perimetro); 
+        }
+    </script>
+    <!--Actividad 2.8-->
+    <script>
+    let nombre = prompt("Introduce tu nombre:");
+    let apellido = prompt("Introduce tu primer apellido:");
+    let poblacion = prompt("¿En qué población vives?");
+    console.log("=======================");
+    console.log(`Hola ${nombre} ${apellido}`);
+    console.log(`Adiós habitante de ${poblacion}`);
+    console.log("=======================");
+
+    </script>
+    <!--Actividad 2.9-->
+    <script>
+    let primer_saludo = "hola";
+    let segundo_saludo = primer_saludo;
+    primer_saludo = "hello";
+    console.log(`primer_saludo = ${primer_saludo}`);
+    console.log(`segundo_saludo = ${segundo_saludo}`);
+    </script>
+    <!--Actividad 2.10-->
+    <script>
+    let n = parseInt(prompt("Introduce un número:"));
+    while (n >= 0) {
+        console.log(n);
+        n--;
+    }
+    </script>
+    <!--Actividad 2.11-->
+    <script>
+    let nu = parseInt(prompt("Introduce un número:"));
+    for (let i = nu; i >= 0; i--) {
+        console.log(i);
+    }
+    </script>
+    <!--Actividad 2.12-->
+    <script>
+    let lado = parseInt(prompt("Introduce el tamaño del cuadrado:"));
+    let fila = "";
+    for (let i = 0; i < lado; i++) {
+        fila = "";
+            for (let j = 0; j < lado; j++) {
+                fila += "* ";
+            }
+        console.log(fila);
+    }
+    </script>
+    <!--Actividad 2.13-->
+    <script>
+    let precio = parseFloat(prompt("Introduce el precio sin IVA:"));
+    let iva = parseFloat(prompt("Introduce el porcentaje de IVA:"));
+    let total = precio + (precio * iva / 100);
+    console.log(`Precio total: ${total} €`);
+    </script>
+    <!--Actividad 2.14-->
+    <script>
+    let numero = parseInt(prompt("Jugador 1: introduce un número secreto:"));
+    console.clear();
+    let adivinar;
+    for (let i = 1; i <= 5; i++) {
+    adivinar = parseInt(prompt(`Intento ${i}: Adivina el número:`));
+    if (adivinar === numero) {
+        console.log("¡Correcto! Has acertado.");
+        break;
+    } else {
+        console.log("Incorrecto, intenta otra vez.");
+    }
+    }
+    </script>
+    <!--Actividad 2.15-->
+    <script>
+    let nota = parseInt(prompt("Introduce la nota (0-10):"));
+    switch (true) {
+    case (nota < 5):
+        console.log("Suspenso");
+        break;
+    case (nota === 5):
+        console.log("Aprobado");
+        break;
+    case (nota === 6):
+        console.log("Bien");
+        break;
+    case (nota === 7 || nota === 8):
+        console.log("Notable");
+        break;
+    case (nota === 9 || nota === 10):
+        console.log("Sobresaliente");
+        break;
+    default:
+        console.log("Nota no válida");
+    }
+    </script>
+    <!--Actividad 2.16-->
+    <script>
+
+    </script>
+    <!--Actividad 2.17-->
+    <script>
+
+    </script>
+    <!--Actividad 2.18-->
+    <script>
+
+    </script>
+    <!--Actividad 2.19-->
+    <script>
+
+    </script>
+    <!--Actividad 2.20-->
+    <script>
+
+    </script>
+</body>
+</html>
