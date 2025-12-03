@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Géneros</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="back">⬅ Inicio</a>
+    <h1>Gestión de géneros</h1>
+  </header>
+
+  <main class="container">
+    <form id="genreForm">
+      <input type="text" id="genreName" maxlength="50" placeholder="Nuevo género" required>
+      <button type="submit">Añadir género</button>
+    </form>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="genresTable"></tbody>
+    </table>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

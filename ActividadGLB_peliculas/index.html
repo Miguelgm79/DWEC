@@ -1,91 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CMDB – Star Wars</title>
-
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CMDB Películas</title>
+  <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
+  <header>
+    <h1>CMDB Películas</h1>
+    <p>Selecciona un apartado</p>
+  </header>
 
-    <h1>CMDB – Películas Star Wars</h1>
-
-    
-
-    <!-- ========================================= -->
-    <!--                LISTA DE PELÍCULAS         -->
-    <!-- ========================================= -->
-    <div class="container">
-
-        <h2>Películas</h2>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Estreno</th>
-                    <th>Popularidad</th>
-                    <th>Puntuación</th>
-                    <th>Votos</th>
-                    <th>Géneros</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="moviesTable"></tbody>
-        </table>
-
+  <main class="container">
+    <div class="menu-grid">
+      <a class="menu-card" href="generos.html">🎭 Géneros</a>
+      <a class="menu-card" href="peliculas.html">🎬 Películas</a>
+      <a class="menu-card" href="listado.html">📃 Listado de películas</a>
     </div>
-
-    <!-- ========================================= -->
-    <!--                 POPUP VOTACIÓN            -->
-    <!-- ========================================= -->
-    <div id="votingPopup">
-        <h3>Votar película</h3>
-        <p id="popupTitle"></p>
-        <input type="number" id="ratingValue" min="0" max="10" placeholder="0-10">
-        <br><br>
-        <button id="sendVote">Enviar</button>
-        <button id="closePopup" class="secondary">Cerrar</button>
-    </div>
-
-    <!-- ========================================= -->
-    <!--           GESTIÓN DE GÉNEROS              -->
-    <!-- ========================================= -->
-    <div class="container">
-
-        <h2>Gestión de géneros</h2>
-
-        <form id="genreForm">
-            <div class="form-row">
-                <label>ID:</label>
-                <input type="text" id="genreId" disabled>
-            </div>
-
-            <div class="form-row">
-                <label>Nombre:</label>
-                <input type="text" id="genreName" maxlength="30">
-            </div>
-
-            <div class="form-buttons">
-                <button type="submit" id="saveGenre">Guardar</button>
-                <button type="button" id="deleteGenre" class="secondary">Eliminar</button>
-                <button type="button" id="newGenre">Nuevo</button>
-            </div>
-        </form>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Género</th>
-                </tr>
-            </thead>
-            <tbody id="genresTable"></tbody>
-        </table>
-
-    </div>
-    
-    <script src="app.js"></script>
+  </main>
 </body>
 </html>

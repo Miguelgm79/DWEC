@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Películas</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="back">⬅ Inicio</a>
+    <h1>Gestión de películas</h1>
+  </header>
+
+  <main class="container">
+
+    <form id="movieForm">
+      <div class="form-row">
+        <label>ID:</label>
+        <input type="text" id="movieId" disabled>
+      </div>
+
+      <div class="form-row">
+        <label>Título:</label>
+        <input type="text" id="movieTitle" maxlength="100" required>
+      </div>
+
+      <div class="form-row">
+        <label>Estreno:</label>
+        <input type="date" id="movieReleaseDate" required>
+      </div>
+
+      <div class="form-row">
+        <label>Popularidad:</label>
+        <input type="number" id="moviePopularity" min="0" max="100" step="0.1" required>
+      </div>
+
+      <div class="form-row">
+        <label>Géneros:</label>
+        <select id="movieGenres" multiple size="5"></select>
+        <small class="help">Ctrl/Cmd para multiselección</small>
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" id="saveMovie">Guardar</button>
+        <button type="button" id="deleteMovie" class="secondary">Eliminar</button>
+        <button type="button" id="newMovie">Nueva</button>
+      </div>
+    </form>
+
+    <h2 style="margin-top:2rem;">Películas existentes</h2>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Estreno</th>
+          <th>Popularidad</th>
+          <th>Score</th>
+          <th>Géneros</th>
+        </tr>
+      </thead>
+      <tbody id="moviesTable"></tbody>
+    </table>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
