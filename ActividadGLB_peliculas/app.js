@@ -1,6 +1,4 @@
-/* ============================
-   LOCAL STORAGE HELPERS
-============================ */
+/* ============================LOCAL STORAGE HELPERS============================ */
 
 function getGenres() {
   return JSON.parse(localStorage.getItem("cmdb_genres")) || [];
@@ -18,9 +16,7 @@ function saveMovies(movies) {
   localStorage.setItem("cmdb_movies", JSON.stringify(movies));
 }
 
-/* ============================
-   INIT POR PÁGINA
-============================ */
+/* ============================INIT POR PÁGINA============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
   const path = location.pathname.toLowerCase();
@@ -30,9 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (path.includes("listado.html")) initMoviesListPage();
 });
 
-/* ============================
-   GÉNEROS (CRUD simple)
-============================ */
+/* ============================GÉNEROS (CRUD simple)============================ */
 
 function initGenresPage() {
   listGenres();
@@ -103,9 +97,7 @@ function listGenres() {
   fillGenresSelect();
 }
 
-/* ============================
-   PELÍCULAS (CRUD + VALIDACIONES)
-============================ */
+/* ============================PELÍCULAS (CRUD + VALIDACIONES)============================ */
 
 function initMoviesCrudPage() {
   fillGenresSelect();
@@ -267,9 +259,7 @@ function deleteMovie() {
   document.getElementById("movieId").value = "";
 }
 
-/* ============================
-   LISTADO + VOTAR
-============================ */
+/* ============================LISTADO + VOTAR============================ */
 
 function initMoviesListPage() {
   listMovies(true);
