@@ -1,126 +1,141 @@
-/* ============================LOCAL STORAGE HELPERS============================ */
-
-function getGenres() {
-  return JSON.parse(localStorage.getItem("cmdb_genres")) || [];
-}
-
-function saveGenres(genres) {
-  localStorage.setItem("cmdb_genres", JSON.stringify(genres));
-}
-
-function getMovies() {
-  return JSON.parse(localStorage.getItem("cmdb_movies")) || [];
-}
-
-function saveMovies(movies) {
-  localStorage.setItem("cmdb_movies", JSON.stringify(movies));
-}
-
-/* ============================INIT POR PÁGINA============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const path = location.pathname.toLowerCase();
+  // si existe la lógica externa
+  if (window.CMDBLogic?.ensureUnknownGenre) {
+    CMDBLogic.ensureUnknownGenre();
+  }
 
-  if (path.includes("generos.html")) initGenresPage();
-  if (path.includes("peliculas.html")) initMoviesCrudPage();
-  if (path.includes("listado.html")) initMoviesListPage();
+  if (document.getElementById("genreForm")) initGenresPage();
+  if (document.getElementById("movieForm")) initMoviesPage();
+  if (document.getElementById("moviesTable")) initListadoPage();
 });
 
-/* ============================GÉNEROS (CRUD simple)============================ */
+/* ============================ GÉNEROS ============================ */
 
 function initGenresPage() {
-  listGenres();
-
   const form = document.getElementById("genreForm");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    addGenre();
+    addOrUpdateGenre();
   });
+
+  // Delegación de eventos para botones Editar/Eliminar
+  const tableBody = document.getElementById("genresTable");
+  tableBody.addEventListener("click", (e) => {
+    const tr = e.target.closest("tr");
+    if (!tr) return;
+
+    const id = parseInt(tr.dataset.id);
+
+    if (e.target.classList.contains("btn-edit-genre")) {
+      startEditGenre(id);
+    }
+
+    if (e.target.classList.contains("btn-delete-genre")) {
+      deleteGenre(id);
+    }
+  });
+
+  listGenres();
 }
 
-function addGenre() {
+function addOrUpdateGenre() {
   const nameInput = document.getElementById("genreName");
-  const name = nameInput.value.trim();
+  const idEditingInput = document.getElementById("genreIdEditing");
 
-  if (!name) return;
+  const name = nameInput.value;
+  const idEditing = idEditingInput.value
+    ? parseInt(idEditingInput.value)
+    : null;
 
-  const genres = getGenres();
-
-  if (genres.some(g => g.name.toLowerCase() === name.toLowerCase())) {
-    alert("Ese género ya existe.");
+  const res = CMDBLogic.addOrUpdateGenreLogic(name, idEditing);
+  if (!res.ok) {
+    alert(res.msg);
     return;
   }
 
-  const newId = genres.length ? Math.max(...genres.map(g => g.id)) + 1 : 1;
-
-  genres.push({ id: newId, name });
-  saveGenres(genres);
-
+  idEditingInput.value = "";
   nameInput.value = "";
   listGenres();
 }
 
+function startEditGenre(id) {
+  const genre = CMDBLogic.getGenres().find(g => g.id === id);
+  if (!genre) return;
+
+  document.getElementById("genreIdEditing").value = id;
+  document.getElementById("genreName").value = genre.name;
+}
+
 function deleteGenre(id) {
-  let genres = getGenres();
-  genres = genres.filter(g => g.id !== id);
-  saveGenres(genres);
-
-  // También eliminamos ese género de las pelis (si lo tienen)
-  let movies = getMovies();
-  movies.forEach(m => {
-    m.genres = m.genres.filter(gid => gid !== id);
-  });
-  saveMovies(movies);
-
+  const res = CMDBLogic.deleteGenreLogic(id);
+  if (!res.ok) {
+    alert(res.msg);
+    return;
+  }
   listGenres();
-  listMovies(); // por si estamos en pelis
 }
 
 function listGenres() {
   const table = document.getElementById("genresTable");
   if (!table) return;
 
-  const genres = getGenres();
+  const genres = CMDBLogic.getGenres();
   table.innerHTML = "";
 
   genres.forEach(g => {
     const tr = document.createElement("tr");
+    tr.dataset.id = g.id;
+
     tr.innerHTML = `
       <td>${g.id}</td>
       <td>${g.name}</td>
-      <td><button onclick="deleteGenre(${g.id})">Eliminar</button></td>
+      <td>
+        <button type="button" class="btn-edit-genre">Editar</button>
+        <button type="button" class="btn-delete-genre">Eliminar</button>
+      </td>
     `;
     table.appendChild(tr);
   });
 
-  // refresca selector de géneros en películas
   fillGenresSelect();
 }
 
-/* ============================PELÍCULAS (CRUD + VALIDACIONES)============================ */
+/* ============================ PELÍCULAS ============================ */
 
-function initMoviesCrudPage() {
+function initMoviesPage() {
   fillGenresSelect();
   listMovies(false);
 
-  document.getElementById("newMovie").addEventListener("click", () => {
-    document.getElementById("movieForm").reset();
-    document.getElementById("movieId").value = "";
-  });
+  document.getElementById("saveMovie")
+    .addEventListener("click", saveOrUpdateMovie);
 
-  document.getElementById("movieForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-    saveOrUpdateMovie();
-  });
+  document.getElementById("deleteMovie")
+    .addEventListener("click", deleteMovie);
 
-  document.getElementById("deleteMovie").addEventListener("click", deleteMovie);
+  document.getElementById("newMovie")
+    .addEventListener("click", clearMovieForm);
+
+  // Delegación de eventos para seleccionar fila en CRUD
+  const tableBody = document.getElementById("moviesTable");
+  tableBody.addEventListener("click", (e) => {
+    const tr = e.target.closest("tr");
+    if (!tr) return;
+
+    // si estamos en CRUD (no en listado votar)
+    if (!tableBody.dataset.mode || tableBody.dataset.mode !== "votes") {
+      const movieId = parseInt(tr.dataset.id);
+      const movie = CMDBLogic.getMovies().find(m => m.id === movieId);
+      if (movie) loadMovieIntoForm(movie);
+    }
+  });
 }
 
 function fillGenresSelect() {
   const select = document.getElementById("movieGenres");
   if (!select) return;
 
-  const genres = getGenres();
+  const genres = CMDBLogic.getGenres();
   select.innerHTML = "";
 
   genres.forEach(g => {
@@ -131,198 +146,154 @@ function fillGenresSelect() {
   });
 }
 
-function selectMovie(movie) {
-  document.getElementById("movieId").value = movie.id;
-  document.getElementById("movieTitle").value = movie.title;
-  document.getElementById("movieReleaseDate").value = movie.releaseDate;
-  document.getElementById("moviePopularity").value = movie.popularity;
-
-  const select = document.getElementById("movieGenres");
-  Array.from(select.options).forEach(opt => {
-    opt.selected = movie.genres.includes(parseInt(opt.value));
-  });
-}
-
-// a–e
-function validateMovieInput({ id, title, releaseDate, popularity, genres }) {
-  const allGenres = getGenres();
-
-  // a) ID numérico válido (y no modificable -> disabled)
-  if (id != null && (!Number.isInteger(id) || id <= 0)) {
-    return "El identificador debe ser un entero positivo.";
-  }
-
-  // b) tipos y tamaños
-  if (typeof title !== "string" || title.trim().length === 0) {
-    return "El título no puede estar vacío.";
-  }
-  if (title.length > 100) {
-    return "El título no puede superar los 100 caracteres.";
-  }
-  if (typeof popularity !== "number" || Number.isNaN(popularity)) {
-    return "La popularidad debe ser numérica.";
-  }
-
-  // c) fecha entre 01/01/1900 y hoy
-  const minDate = new Date("1900-01-01");
-  const relDate = new Date(releaseDate);
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  if (Number.isNaN(relDate.getTime())) {
-    return "La fecha de estreno no es válida.";
-  }
-  if (relDate < minDate) {
-    return "La fecha de estreno no puede ser anterior al 01/01/1900.";
-  }
-  if (relDate > today) {
-    return "La fecha de estreno no puede ser posterior a hoy.";
-  }
-
-  // d) popularidad 0..100
-  if (popularity < 0 || popularity > 100) {
-    return "La popularidad debe estar entre 0 y 100.";
-  }
-
-  // e) géneros existentes
-  const validGenreIds = new Set(allGenres.map(g => g.id));
-  if (!Array.isArray(genres) || genres.length === 0) {
-    return "Debes seleccionar al menos un género.";
-  }
-  const invalid = genres.filter(gid => !validGenreIds.has(gid));
-  if (invalid.length > 0) {
-    return "Has seleccionado géneros que no existen en el sistema.";
-  }
-
-  return null;
-}
-
 function saveOrUpdateMovie() {
-  const movies = getMovies();
-
-  const idStr = document.getElementById("movieId").value;
+  const idStr = document.getElementById("movieId").value.trim();
   const title = document.getElementById("movieTitle").value.trim();
   const releaseDate = document.getElementById("movieReleaseDate").value;
   const popularity = parseFloat(document.getElementById("moviePopularity").value);
 
-  const selectedGenres = Array.from(
+  let selectedGenres = Array.from(
     document.getElementById("movieGenres").selectedOptions
   ).map(o => parseInt(o.value));
 
-  let id = idStr ? parseInt(idStr) : null;
-
-  const err = validateMovieInput({ id, title, releaseDate, popularity, genres: selectedGenres });
-  if (err) { alert(err); return; }
-
-  if (!id) {
-    const newId = movies.length ? Math.max(...movies.map(m => m.id)) + 1 : 1;
-
-    movies.push({
-      id: newId,
-      title,
-      releaseDate,
-      popularity,
-      ratings: [],
-      score: 0,
-      votes: 0,
-      genres: selectedGenres
-    });
-  } else {
-    const idx = movies.findIndex(m => m.id === id);
-    if (idx === -1) { alert("La película no existe."); return; }
-
-    movies[idx].title = title;
-    movies[idx].releaseDate = releaseDate;
-    movies[idx].popularity = popularity;
-    movies[idx].genres = selectedGenres;
+  // si no seleccionan nada -> género desconocido
+  if (selectedGenres.length === 0) {
+    const unknown = CMDBLogic.getGenres()
+      .find(g => g.name.toLowerCase() === "género desconocido");
+    if (unknown) selectedGenres = [unknown.id];
   }
 
-  saveMovies(movies);
-  listMovies(false);
-  document.getElementById("movieForm").reset();
-  document.getElementById("movieId").value = "";
-}
+  const id = idStr ? parseInt(idStr) : null;
 
-function deleteMovie() {
-  const id = parseInt(document.getElementById("movieId").value);
+  const res = CMDBLogic.saveOrUpdateMovieLogic({
+    id, title, releaseDate, popularity, genres: selectedGenres
+  });
 
-  if (!id) {
-    alert("Selecciona una película.");
+  if (!res.ok) {
+    alert(res.msg);
     return;
   }
 
-  let movies = getMovies().filter(m => m.id !== id);
-  saveMovies(movies);
+  clearMovieForm();
   listMovies(false);
-
-  document.getElementById("movieForm").reset();
-  document.getElementById("movieId").value = "";
 }
 
-/* ============================LISTADO + VOTAR============================ */
+function deleteMovie() {
+  const idStr = document.getElementById("movieId").value.trim();
+  if (!idStr) {
+    alert("Selecciona una película primero.");
+    return;
+  }
 
-function initMoviesListPage() {
-  listMovies(true);
+  const id = parseInt(idStr);
+  const res = CMDBLogic.deleteMovieLogic(id);
+
+  if (!res.ok) {
+    alert(res.msg);
+    return;
+  }
+
+  clearMovieForm();
+  listMovies(false);
+}
+
+function clearMovieForm() {
+  document.getElementById("movieId").value = "";
+  document.getElementById("movieTitle").value = "";
+  document.getElementById("movieReleaseDate").value = "";
+  document.getElementById("moviePopularity").value = "";
+  document.getElementById("movieGenres").selectedIndex = -1;
+}
+
+function loadMovieIntoForm(movie) {
+  document.getElementById("movieId").value = movie.id;
+  document.getElementById("movieTitle").value = movie.title;
+  document.getElementById("movieReleaseDate").value = movie.releaseDate || "";
+  document.getElementById("moviePopularity").value = movie.popularity ?? "";
+
+  const sel = document.getElementById("movieGenres");
+  Array.from(sel.options).forEach(opt => {
+    opt.selected = movie.genres.includes(parseInt(opt.value));
+  });
 }
 
 function listMovies(withVotes = false) {
   const table = document.getElementById("moviesTable");
   if (!table) return;
 
-  const movies = getMovies();
-  const genres = getGenres();
+  const movies = CMDBLogic.getMovies();
+  const genres = CMDBLogic.getGenres();
   table.innerHTML = "";
 
-  movies.forEach(movie => {
-    const tr = document.createElement("tr");
+  // marca modo para saber si es listado votar
+  table.dataset.mode = withVotes ? "votes" : "crud";
 
+  movies.forEach(movie => {
     const movieGenres = movie.genres
-      .map(id => genres.find(g => g.id === id)?.name)
+      .map(gid => genres.find(g => g.id === gid)?.name)
       .filter(Boolean)
       .join(", ");
 
-    tr.innerHTML = `
-      <td>${movie.id}</td>
-      <td>${movie.title}</td>
-      <td>${movie.releaseDate || "-"}</td>
-      <td>${movie.popularity ?? "-"}</td>
-      <td>${movie.score || 0}</td>
-      ${withVotes ? `
-        <td>
-          <input type="number" min="1" max="10" step="0.1" id="rating-${movie.id}">
-          <button onclick="rateMovie(${movie.id})">Votar</button>
-        </td>
-      ` : `<td>${movieGenres || "-"}</td>`}
-    `;
+    const tr = document.createElement("tr");
+    tr.dataset.id = movie.id;
 
-    // En CRUD: click en fila para editar
-    if (!withVotes) {
-      tr.addEventListener("click", () => selectMovie(movie));
+    if (withVotes) {
+      tr.innerHTML = `
+        <td>${movie.id}</td>
+        <td>${movie.title}</td>
+        <td>${movie.releaseDate || "-"}</td>
+        <td>${movie.popularity ?? "-"}</td>
+        <td>${movie.score || "0.00"}</td>
+        <td>${movie.votes || 0}</td>
+        <td>${movieGenres || "-"}</td>
+        <td>
+          <input type="number" min="1" max="10" step="1" id="rating-${movie.id}">
+          <button type="button" class="btn-rate-movie">Votar</button>
+        </td>
+      `;
+    } else {
+      tr.innerHTML = `
+        <td>${movie.id}</td>
+        <td>${movie.title}</td>
+        <td>${movie.releaseDate || "-"}</td>
+        <td>${movie.popularity ?? "-"}</td>
+        <td>${movieGenres || "-"}</td>
+      `;
     }
 
     table.appendChild(tr);
   });
 }
 
+/* ============================ LISTADO (VOTAR) ============================ */
+
+function initListadoPage() {
+  const tableBody = document.getElementById("moviesTable");
+
+  // Delegación para botón votar
+  tableBody.addEventListener("click", (e) => {
+    if (!e.target.classList.contains("btn-rate-movie")) return;
+
+    const tr = e.target.closest("tr");
+    if (!tr) return;
+
+    const id = parseInt(tr.dataset.id);
+    rateMovie(id);
+  });
+
+  listMovies(true);
+}
+
 function rateMovie(id) {
-  const movies = getMovies();
-  const movie = movies.find(m => m.id === id);
-  if (!movie) return;
-
   const input = document.getElementById(`rating-${id}`);
-  const rating = parseFloat(input.value);
+  const rating = parseInt(input.value);
 
-  if (Number.isNaN(rating) || rating < 1 || rating > 10) {
-    alert("La valoración debe estar entre 1 y 10.");
+  const res = CMDBLogic.rateMovieLogic(id, rating);
+  if (!res.ok) {
+    alert(res.msg);
     return;
   }
 
-  movie.ratings.push(rating);
-  movie.votes = movie.ratings.length;
-  movie.score = (movie.ratings.reduce((a,b)=>a+b,0) / movie.votes).toFixed(2);
-
-  saveMovies(movies);
   listMovies(true);
-
   input.value = "";
 }

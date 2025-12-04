@@ -13,11 +13,23 @@
   </header>
 
   <main class="container">
-    <form id="genreForm">
-      <input type="text" id="genreName" maxlength="50" placeholder="Nuevo género" required>
-      <button type="submit">Añadir género</button>
+    <form id="genreForm" class="form-card">
+      
+      <input type="hidden" id="genreIdEditing">
+
+      <label for="genreName">Nombre del género</label>
+      <input
+        type="text"
+        id="genreName"
+        maxlength="50"
+        placeholder="Nuevo género"
+        required
+      />
+
+      <button type="submit">Guardar género</button>
     </form>
 
+    <h2>Listado de géneros</h2>
     <table class="data-table">
       <thead>
         <tr>
@@ -30,6 +42,7 @@
     </table>
   </main>
 
+  <script src="CMDBLogic.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

@@ -14,42 +14,30 @@
 
   <main class="container">
 
-    <form id="movieForm">
-      <div class="form-row">
-        <label>ID:</label>
-        <input type="text" id="movieId" disabled>
-      </div>
+    <form id="movieForm" class="form-card" onsubmit="return false;">
+      <label for="movieId">ID</label>
+      <input type="text" id="movieId" placeholder="(autogenerado)" readonly>
 
-      <div class="form-row">
-        <label>Título:</label>
-        <input type="text" id="movieTitle" maxlength="100" required>
-      </div>
+      <label for="movieTitle">Título</label>
+      <input type="text" id="movieTitle" maxlength="100" required>
 
-      <div class="form-row">
-        <label>Estreno:</label>
-        <input type="date" id="movieReleaseDate" required>
-      </div>
+      <label for="movieReleaseDate">Fecha de estreno</label>
+      <input type="date" id="movieReleaseDate">
 
-      <div class="form-row">
-        <label>Popularidad:</label>
-        <input type="number" id="moviePopularity" min="0" max="100" step="0.1" required>
-      </div>
+      <label for="moviePopularity">Popularidad (0-100)</label>
+      <input type="number" id="moviePopularity" min="0" max="100" required>
 
-      <div class="form-row">
-        <label>Géneros:</label>
-        <select id="movieGenres" multiple size="5"></select>
-        <small class="help">Ctrl/Cmd para multiselección</small>
-      </div>
+      <label for="movieGenres">Géneros</label>
+      <select id="movieGenres" multiple size="6"></select>
 
-      <div class="form-buttons">
-        <button type="submit" id="saveMovie">Guardar</button>
-        <button type="button" id="deleteMovie" class="secondary">Eliminar</button>
-        <button type="button" id="newMovie">Nueva</button>
+      <div class="btn-row">
+        <button id="saveMovie" type="button">Guardar</button>
+        <button id="deleteMovie" type="button">Eliminar</button>
+        <button id="newMovie" type="button">Nuevo</button>
       </div>
     </form>
 
-    <h2 style="margin-top:2rem;">Películas existentes</h2>
-
+    <h2>Listado de películas</h2>
     <table class="data-table">
       <thead>
         <tr>
@@ -57,7 +45,6 @@
           <th>Título</th>
           <th>Estreno</th>
           <th>Popularidad</th>
-          <th>Score</th>
           <th>Géneros</th>
         </tr>
       </thead>
@@ -66,6 +53,7 @@
 
   </main>
 
+  <script src="CMDBLogic.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
