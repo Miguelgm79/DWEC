@@ -10,7 +10,7 @@
  * Esta capa depende de CMDBLogic.js para la lógica y persistencia.
  *
  * @author
- * Noma Garcia
+ * Miguel Garcia
  * @version 1.0.0
  */
 
