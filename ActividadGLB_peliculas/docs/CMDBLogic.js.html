@@ -1,4 +1,32 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: CMDBLogic.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: CMDBLogic.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @file CMDBLogic.js
  * @description
  * Capa de lógica de negocio y persistencia para la CMDB de películas.
@@ -65,10 +93,10 @@ function migrateOldKeysIfNeeded() {
   const currentGenres = JSON.parse(localStorage.getItem(GENRES_KEY) || "null");
   const currentMovies = JSON.parse(localStorage.getItem(MOVIES_KEY) || "null");
 
-  if (!currentGenres && oldGenres) {
+  if (!currentGenres &amp;&amp; oldGenres) {
     localStorage.setItem(GENRES_KEY, JSON.stringify(oldGenres));
   }
-  if (!currentMovies && oldMovies) {
+  if (!currentMovies &amp;&amp; oldMovies) {
     localStorage.setItem(MOVIES_KEY, JSON.stringify(oldMovies));
   }
 }
@@ -144,7 +172,7 @@ function addOrUpdateGenreLogic(name, idEditing = null) {
 
   // Duplicados (permitiendo el mismo si es el que editas)
   const dup = genres.some(g =>
-    g.name.toLowerCase() === cleanName.toLowerCase() &&
+    g.name.toLowerCase() === cleanName.toLowerCase() &amp;&amp;
     g.id !== idEditing
   );
   if (dup) return { ok: false, msg: "Ese género ya existe." };
@@ -198,11 +226,11 @@ function deleteGenreLogic(id) {
 function validateMovieInput(movie) {
   const { id, title, releaseDate, popularity, genres } = movie;
 
-  if (id !== null && !Number.isInteger(id)) {
+  if (id !== null &amp;&amp; !Number.isInteger(id)) {
     return "El ID debe ser entero.";
   }
 
-  if (!title || title.trim().length < 1 || title.trim().length > 100) {
+  if (!title || title.trim().length &lt; 1 || title.trim().length > 100) {
     return "El título debe tener entre 1 y 100 caracteres.";
   }
 
@@ -210,12 +238,12 @@ function validateMovieInput(movie) {
     const date = new Date(releaseDate);
     const minDate = new Date("1900-01-01");
     const today = new Date();
-    if (Number.isNaN(date.getTime()) || date < minDate || date > today) {
+    if (Number.isNaN(date.getTime()) || date &lt; minDate || date > today) {
       return "La fecha de estreno debe ser válida (entre 1900 y hoy).";
     }
   }
 
-  if (Number.isNaN(popularity) || popularity < 0 || popularity > 100) {
+  if (Number.isNaN(popularity) || popularity &lt; 0 || popularity > 100) {
     return "La popularidad debe estar entre 0 y 100.";
   }
 
@@ -292,7 +320,7 @@ function rateMovieLogic(id, rating) {
   const movie = movies.find(m => m.id === id);
   if (!movie) return { ok: false, msg: "Película no encontrada." };
 
-  if (!Number.isInteger(rating) || rating < 1 || rating > 10) {
+  if (!Number.isInteger(rating) || rating &lt; 1 || rating > 10) {
     return { ok: false, msg: "La valoración debe ser un entero entre 1 y 10." };
   }
 
@@ -331,3 +359,26 @@ window.CMDBLogic = {
   deleteMovieLogic,
   rateMovieLogic
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#GENRES_KEY">GENRES_KEY</a></li><li><a href="global.html#MOVIES_KEY">MOVIES_KEY</a></li><li><a href="global.html#OLD_GENRES_KEY">OLD_GENRES_KEY</a></li><li><a href="global.html#OLD_MOVIES_KEY">OLD_MOVIES_KEY</a></li><li><a href="global.html#addOrUpdateGenre">addOrUpdateGenre</a></li><li><a href="global.html#addOrUpdateGenreLogic">addOrUpdateGenreLogic</a></li><li><a href="global.html#clearMovieForm">clearMovieForm</a></li><li><a href="global.html#deleteGenre">deleteGenre</a></li><li><a href="global.html#deleteGenreLogic">deleteGenreLogic</a></li><li><a href="global.html#deleteMovie">deleteMovie</a></li><li><a href="global.html#deleteMovieLogic">deleteMovieLogic</a></li><li><a href="global.html#ensureUnknownGenre">ensureUnknownGenre</a></li><li><a href="global.html#fillGenresSelect">fillGenresSelect</a></li><li><a href="global.html#getGenres">getGenres</a></li><li><a href="global.html#getMovies">getMovies</a></li><li><a href="global.html#initGenresPage">initGenresPage</a></li><li><a href="global.html#initListadoPage">initListadoPage</a></li><li><a href="global.html#initMoviesPage">initMoviesPage</a></li><li><a href="global.html#listGenres">listGenres</a></li><li><a href="global.html#listMovies">listMovies</a></li><li><a href="global.html#loadMovieIntoForm">loadMovieIntoForm</a></li><li><a href="global.html#migrateOldKeysIfNeeded">migrateOldKeysIfNeeded</a></li><li><a href="global.html#rateMovie">rateMovie</a></li><li><a href="global.html#rateMovieLogic">rateMovieLogic</a></li><li><a href="global.html#saveGenres">saveGenres</a></li><li><a href="global.html#saveMovies">saveMovies</a></li><li><a href="global.html#saveOrUpdateMovie">saveOrUpdateMovie</a></li><li><a href="global.html#saveOrUpdateMovieLogic">saveOrUpdateMovieLogic</a></li><li><a href="global.html#startEditGenre">startEditGenre</a></li><li><a href="global.html#validateMovieInput">validateMovieInput</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Fri Dec 05 2025 10:41:57 GMT+0100 (hora estándar de Europa central)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
