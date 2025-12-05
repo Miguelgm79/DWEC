@@ -1,12 +1,62 @@
+/**
+ * @file CMDBLogic.js
+ * @description
+ * Capa de lógica de negocio y persistencia para la CMDB de películas.
+ * Gestiona:
+ *  - Migración de claves antiguas de LocalStorage
+ *  - CRUD de géneros y películas
+ *  - Validaciones según requisitos (a–e)
+ *  - Sistema de votaciones
+ *
+ * Exporta la API pública en window.CMDBLogic para uso desde app.js.
+ *
+ * @author
+ * Noma Garcia
+ * @version 1.0.0
+ */
 
+/**
+ * @constant {string} GENRES_KEY - Clave principal de géneros en LocalStorage.
+ */
 const GENRES_KEY = "genres";
+/**
+ * @constant {string} MOVIES_KEY - Clave principal de películas en LocalStorage.
+ */
 const MOVIES_KEY = "movies";
+/**
+ * @constant {string} OLD_GENRES_KEY - Clave antigua (compatibilidad).
+ */
 const OLD_GENRES_KEY = "cmdb_genres";
+/**
+ * @constant {string} OLD_MOVIES_KEY - Clave antigua (compatibilidad).
+ */
 const OLD_MOVIES_KEY = "cmdb_movies";
+
+/**
+ * Representa un género del sistema.
+ * @typedef {Object} Genre
+ * @property {number} id - Identificador único autoincremental.
+ * @property {string} name - Nombre del género.
+ */
+
+/**
+ * Representa una película del sistema.
+ * @typedef {Object} Movie
+ * @property {number} id - Identificador único autoincremental.
+ * @property {string} title - Título de la película.
+ * @property {string} releaseDate - Fecha YYYY-MM-DD.
+ * @property {number} popularity - Popularidad 0..100.
+ * @property {number[]} genres - IDs de géneros asociados.
+ * @property {number[]} ratings - Valoraciones 1..10.
+ * @property {number} votes - Total de votos.
+ * @property {string} score - Media de valoraciones con 2 decimales.
+ */
 
 /**
  * Migración: si hay datos en cmdb_* y no en claves originales,
  * los copia a las claves originales.
+ *
+ * @returns {void}
  */
 function migrateOldKeysIfNeeded() {
   const oldGenres = JSON.parse(localStorage.getItem(OLD_GENRES_KEY) || "null");
@@ -25,7 +75,8 @@ function migrateOldKeysIfNeeded() {
 
 /**
  * Recupera el array de géneros desde LocalStorage.
- * @returns {{id:number, name:string}[]} lista de géneros
+ *
+ * @returns {Genre[]} Lista de géneros.
  */
 function getGenres() {
   migrateOldKeysIfNeeded();
@@ -34,7 +85,9 @@ function getGenres() {
 
 /**
  * Guarda el array de géneros en LocalStorage.
- * @param {{id:number, name:string}[]} genres
+ *
+ * @param {Genre[]} genres - Lista de géneros a persistir.
+ * @returns {void}
  */
 function saveGenres(genres) {
   localStorage.setItem(GENRES_KEY, JSON.stringify(genres));
@@ -42,7 +95,8 @@ function saveGenres(genres) {
 
 /**
  * Recupera el array de películas desde LocalStorage.
- * @returns {Array} lista de películas
+ *
+ * @returns {Movie[]} Lista de películas.
  */
 function getMovies() {
   migrateOldKeysIfNeeded();
@@ -51,7 +105,9 @@ function getMovies() {
 
 /**
  * Guarda el array de películas en LocalStorage.
- * @param {Array} movies
+ *
+ * @param {Movie[]} movies - Lista de películas a persistir.
+ * @returns {void}
  */
 function saveMovies(movies) {
   localStorage.setItem(MOVIES_KEY, JSON.stringify(movies));
@@ -60,6 +116,8 @@ function saveMovies(movies) {
 /**
  * Asegura que existe el género "género desconocido".
  * Si no existe, lo crea con id autoincremental.
+ *
+ * @returns {void}
  */
 function ensureUnknownGenre() {
   const genres = getGenres();
@@ -73,9 +131,10 @@ function ensureUnknownGenre() {
 
 /**
  * Añade un género nuevo o actualiza uno existente.
- * @param {string} name
- * @param {number|null} idEditing
- * @returns {{ok:boolean, msg?:string}}
+ *
+ * @param {string} name - Nombre del género.
+ * @param {number|null} [idEditing=null] - ID del género si se edita. Null si es alta.
+ * @returns {{ok:boolean, msg?:string}} Resultado de la operación.
  */
 function addOrUpdateGenreLogic(name, idEditing = null) {
   const cleanName = name.trim();
@@ -105,8 +164,9 @@ function addOrUpdateGenreLogic(name, idEditing = null) {
 
 /**
  * Elimina un género SOLO si no está asociado a películas.
- * @param {number} id
- * @returns {{ok:boolean, msg?:string}}
+ *
+ * @param {number} id - ID del género.
+ * @returns {{ok:boolean, msg?:string}} Resultado.
  */
 function deleteGenreLogic(id) {
   const movies = getMovies();
@@ -125,9 +185,15 @@ function deleteGenreLogic(id) {
 }
 
 /**
- * Valida datos de una película según criterios.
+ * Valida datos de una película según criterios:
+ * a) ID válido
+ * b) Título correcto (1..100 chars)
+ * c) Fecha entre 01/01/1900 y hoy
+ * d) Popularidad 0..100
+ * e) Géneros existentes
+ *
  * @param {{id:number|null,title:string,releaseDate:string,popularity:number,genres:number[]}} movie
- * @returns {string|null} error o null si ok
+ * @returns {string|null} Mensaje de error o null si ok.
  */
 function validateMovieInput(movie) {
   const { id, title, releaseDate, popularity, genres } = movie;
@@ -163,8 +229,9 @@ function validateMovieInput(movie) {
 
 /**
  * Guarda película nueva o actualiza existente.
+ *
  * @param {{id:number|null,title:string,releaseDate:string,popularity:number,genres:number[]}} data
- * @returns {{ok:boolean,msg?:string}}
+ * @returns {{ok:boolean,msg?:string}} Resultado de la operación.
  */
 function saveOrUpdateMovieLogic(data) {
   const movies = getMovies();
@@ -200,8 +267,9 @@ function saveOrUpdateMovieLogic(data) {
 
 /**
  * Elimina película por id.
- * @param {number} id
- * @returns {{ok:boolean,msg?:string}}
+ *
+ * @param {number} id - ID de película a eliminar.
+ * @returns {{ok:boolean,msg?:string}} Resultado.
  */
 function deleteMovieLogic(id) {
   const movies = getMovies();
@@ -214,9 +282,10 @@ function deleteMovieLogic(id) {
 
 /**
  * Añade una valoración a una película y recalcula score/votos.
- * @param {number} id
- * @param {number} rating (1..10 entero)
- * @returns {{ok:boolean,msg?:string}}
+ *
+ * @param {number} id - ID de la película.
+ * @param {number} rating - Valoración entera entre 1 y 10.
+ * @returns {{ok:boolean,msg?:string}} Resultado.
  */
 function rateMovieLogic(id, rating) {
   const movies = getMovies();
@@ -237,7 +306,21 @@ function rateMovieLogic(id, rating) {
   return { ok: true };
 }
 
-/* Exponemos en window para uso desde app.js / onclick */
+/**
+ * API pública expuesta para la capa de UI (app.js).
+ * @type {{
+ *  getGenres: function():Genre[],
+ *  saveGenres: function(Genre[]):void,
+ *  getMovies: function():Movie[],
+ *  saveMovies: function(Movie[]):void,
+ *  ensureUnknownGenre: function():void,
+ *  addOrUpdateGenreLogic: function(string, (number|null)=):{ok:boolean,msg?:string},
+ *  deleteGenreLogic: function(number):{ok:boolean,msg?:string},
+ *  saveOrUpdateMovieLogic: function(Object):{ok:boolean,msg?:string},
+ *  deleteMovieLogic: function(number):{ok:boolean,msg?:string},
+ *  rateMovieLogic: function(number, number):{ok:boolean,msg?:string}
+ * }}
+ */
 window.CMDBLogic = {
   getGenres, saveGenres,
   getMovies, saveMovies,
