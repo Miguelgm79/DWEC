@@ -12,7 +12,7 @@
  *
  * @author 
  * Miguel Garcia
- * @version 1.0.1
+ * @version 1.0.2
  */
 
 /**
@@ -99,11 +99,7 @@ function formatDate(iso) {
 ============================ */
 
 /**
- * Inicializa la página de géneros:
- * - Listener de submit en formulario.
- * - Delegación de eventos para editar/eliminar.
- * - Render inicial de géneros.
- *
+ * Inicializa la página de géneros.
  * @returns {void}
  */
 function initGenresPage() {
@@ -113,6 +109,7 @@ function initGenresPage() {
     addOrUpdateGenre();
   });
 
+  // Delegación de eventos para Editar/Eliminar
   const tableBody = document.getElementById("genresTable");
   tableBody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr");
@@ -133,10 +130,7 @@ function initGenresPage() {
 }
 
 /**
- * Añade un género nuevo o actualiza uno existente.
- * Lee inputs del formulario y delega la validación/persistencia
- * en CMDBLogic.addOrUpdateGenreLogic.
- *
+ * Añade o actualiza género.
  * @returns {void}
  */
 function addOrUpdateGenre() {
@@ -161,9 +155,8 @@ function addOrUpdateGenre() {
 }
 
 /**
- * Carga un género en el formulario y activa modo edición.
- *
- * @param {number} id - ID del género a editar.
+ * Carga género en el formulario para edición.
+ * @param {number} id
  * @returns {void}
  */
 function startEditGenre(id) {
@@ -176,11 +169,8 @@ function startEditGenre(id) {
 }
 
 /**
- * Elimina un género del sistema.
- * Si el género está en uso por alguna película,
- * CMDBLogic devolverá error y se mostrará al usuario.
- *
- * @param {number} id - ID del género a eliminar.
+ * Elimina género.
+ * @param {number} id
  * @returns {void}
  */
 function deleteGenre(id) {
@@ -194,9 +184,7 @@ function deleteGenre(id) {
 }
 
 /**
- * Renderiza la tabla de géneros en pantalla
- * y refresca el selector de géneros de películas.
- *
+ * Pinta tabla de géneros e actualiza select de películas.
  * @returns {void}
  */
 function listGenres() {
@@ -229,12 +217,7 @@ function listGenres() {
 ============================ */
 
 /**
- * Inicializa la página CRUD de películas:
- * - Carga géneros en select múltiple.
- * - Render inicial de tabla (modo CRUD).
- * - Listeners de guardar, eliminar y nueva.
- * - Click en fila para cargar película en formulario.
- *
+ * Inicializa CRUD de películas.
  * @returns {void}
  */
 function initMoviesPage() {
@@ -253,7 +236,7 @@ function initMoviesPage() {
   document.getElementById("newMovie")
     .addEventListener("click", clearMovieForm);
 
-  // Seleccionar fila para editar/eliminar
+  // Click en fila para cargar película al formulario
   const tableBody = document.getElementById("moviesTable");
   tableBody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr");
@@ -266,9 +249,7 @@ function initMoviesPage() {
 }
 
 /**
- * Rellena el <select multiple> de géneros
- * con los géneros existentes en sistema.
- *
+ * Rellena select múltiple de géneros.
  * @returns {void}
  */
 function fillGenresSelect() {
@@ -288,10 +269,8 @@ function fillGenresSelect() {
 }
 
 /**
- * Carga una película en el formulario CRUD
- * para consultar o modificar.
- *
- * @param {Movie} movie - Película seleccionada.
+ * Carga la peli en el formulario.
+ * @param {Movie} movie
  * @returns {void}
  */
 function loadMovieIntoForm(movie) {
@@ -307,8 +286,7 @@ function loadMovieIntoForm(movie) {
 }
 
 /**
- * Limpia el formulario de películas (modo nueva película).
- *
+ * Limpia formulario peli.
  * @returns {void}
  */
 function clearMovieForm() {
@@ -322,13 +300,7 @@ function clearMovieForm() {
 }
 
 /**
- * Guarda una película nueva o actualiza una existente.
- * Lee campos del formulario y delega validación y persistencia
- * en CMDBLogic.saveOrUpdateMovieLogic.
- *
- * Si no hay géneros seleccionados,
- * asigna automáticamente "género desconocido".
- *
+ * Guarda o actualiza peli.
  * @returns {void}
  */
 function saveOrUpdateMovie() {
@@ -342,6 +314,7 @@ function saveOrUpdateMovie() {
     document.getElementById("movieGenres").selectedOptions
   ).map(o => parseInt(o.value));
 
+  // Si no seleccionan nada -> género desconocido
   if (selectedGenres.length === 0) {
     const unknown = CMDBLogic.getGenres()
       .find(g => g.name.toLowerCase() === "género desconocido");
@@ -365,9 +338,7 @@ function saveOrUpdateMovie() {
 }
 
 /**
- * Elimina la película seleccionada (por ID).
- * Si no hay ID cargado, muestra aviso.
- *
+ * Elimina peli seleccionada (por ID).
  * @returns {void}
  */
 function deleteMovie() {
@@ -392,12 +363,12 @@ function deleteMovie() {
 }
 
 /**
- * Renderiza la tabla de películas.
+ * Renderiza tabla de películas.
  *
- * - withVotes=false: modo CRUD.
- * - withVotes=true : modo listado votar (PDF).
+ * - withVotes=false: modo CRUD (peliculas.html).
+ * - withVotes=true : modo listado votar (listado.html).
  *
- * @param {boolean} [withVotes=false] - Activa el modo votación.
+ * @param {boolean} [withVotes=false]
  * @returns {void}
  */
 function listMovies(withVotes = false) {
@@ -435,12 +406,13 @@ function listMovies(withVotes = false) {
         </td>
       `;
     } else {
-      // ✅ CRUD
+      // ✅ CRUD con SCORE (alineado con el thead de peliculas.html)
       tr.innerHTML = `
         <td>${movie.id}</td>
         <td>${movie.title}</td>
         <td>${formatDate(movie.releaseDate)}</td>
         <td>${movie.popularity ?? "-"}</td>
+        <td>${movie.score ?? "0"}</td>
         <td>${movieGenres || "-"}</td>
       `;
     }
@@ -454,16 +426,13 @@ function listMovies(withVotes = false) {
 ============================ */
 
 /**
- * Inicializa la página de listado con votaciones:
- * - Delegación de click para votar.
- * - Render inicial en modo votos.
- *
+ * Inicializa listado con votaciones.
  * @returns {void}
  */
 function initListadoPage() {
   const tableBody = document.getElementById("moviesTable");
 
-  // delegación robusta con closest
+  // Delegación robusta
   tableBody.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn-rate-movie");
     if (!btn) return;
@@ -479,9 +448,8 @@ function initListadoPage() {
 }
 
 /**
- * Envía una valoración a CMDBLogic y refresca la tabla.
- *
- * @param {number} id - ID de la película a valorar.
+ * Envía una valoración y refresca tabla.
+ * @param {number} id
  * @returns {void}
  */
 function rateMovie(id) {
