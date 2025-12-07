@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AVILESA - Líneas</title>
+  <link rel="stylesheet" href="styles/Styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Gestión de líneas</h1>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="Paradas.html">Paradas</a>
+      <a href="Detalle.html">Detalle</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 id="form-title">Alta / Modificación de línea</h2>
+
+      <form id="form-linea" autocomplete="off">
+        <div class="form-row">
+          <label for="numeroLinea">Número de línea</label>
+          <input id="numeroLinea" type="number" min="1" required />
+        </div>
+
+        <div class="form-row">
+          <label for="origenLinea">Origen</label>
+          <input id="origenLinea" type="text" required />
+        </div>
+
+        <div class="form-row">
+          <label for="destinoLinea">Destino</label>
+          <input id="destinoLinea" type="text" required />
+        </div>
+
+        <div class="form-row">
+          <label for="horaSalida">Hora de salida (HH:MM)</label>
+          <input id="horaSalida" type="time" required />
+        </div>
+
+        <div class="form-row">
+          <label for="intervaloLinea">Intervalo entre buses (HH:MM)</label>
+          <input id="intervaloLinea" type="time" required />
+        </div>
+
+        <input id="modoEdicionLinea" type="hidden" value="0" />
+        <input id="numeroLineaOriginal" type="hidden" value="" />
+
+        <div class="form-actions">
+          <button id="btnGuardarLinea" type="submit">Guardar</button>
+          <button id="btnCancelarLinea" type="button">Cancelar</button>
+        </div>
+
+        <p id="msgLinea" class="msg"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Listado de líneas</h2>
+
+      <table class="table" id="tablaLineas">
+        <thead>
+          <tr>
+            <th>Nº</th>
+            <th>Origen</th>
+            <th>Destino</th>
+            <th>Salida</th>
+            <th>Intervalo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyLineas"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/Lineas.js"></script>
+</body>
+</html>

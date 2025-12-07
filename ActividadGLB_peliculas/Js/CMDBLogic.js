@@ -153,16 +153,12 @@ function saveMovies(movies) {
  */
 function ensureUnknownGenre() {
   const genres = getGenres();
-  const exists = genres.some(g => g.name.toLowerCase() === "género desconocido");
-  if (!exists) {
-    const newId = genres.length ? Math.max(...genres.map(g => g.id)) + 1 : 1;
-    genres.push({ id: newId, name: "género desconocido" });
-    saveGenres(genres);
-  }
+  
+  
 }
 
 function initStarWarsSeedIfEmpty() {
-  ensureUnknownGenre();
+  
 
   const existingMovies = getMovies();
   const existingGenres = getGenres();

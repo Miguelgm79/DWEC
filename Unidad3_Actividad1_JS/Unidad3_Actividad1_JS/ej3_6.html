@@ -1,0 +1,29 @@
+<!-- Ejercicio 6
+     Función suma(a,b) que suma dos valores introducidos por teclado.
+     Visualiza el resultado en el cuerpo de la página. -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Ejercicio 6</title>
+</head>
+<body>
+  <h2>Ejercicio 6</h2>
+  <div id="salida"></div>
+
+  <script>
+    // Función que devuelve la suma de dos números
+    function suma(a, b) {
+      return a + b;
+    }
+
+    // Pedimos los dos números
+    let x = parseFloat(prompt("Primer número:"));
+    let y = parseFloat(prompt("Segundo número:"));
+
+    // Mostramos el resultado en el cuerpo
+    document.getElementById("salida").textContent =
+      "La suma es: " + suma(x, y);
+  </script>
+</body>
+</html>

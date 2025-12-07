@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AVILESA - Detalle de línea</title>
+  <link rel="stylesheet" href="styles/Styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Detalle de línea</h1>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="Lineas.html">Líneas</a>
+      <a href="Paradas.html">Paradas</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Selecciona una línea</h2>
+
+      <div class="form-row">
+        <label for="lineaDetalle">Número de línea</label>
+        <select id="lineaDetalle" required>
+          <option value="">-- Selecciona línea --</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button id="btnVerDetalle" type="button">Ver detalle</button>
+        <button id="btnLimpiarDetalle" type="button">Limpiar</button>
+      </div>
+
+      <p id="msgDetalle" class="msg"></p>
+    </section>
+
+    <section class="card">
+      <h2>Paradas de la línea</h2>
+      <div id="infoLinea" class="info-linea"></div>
+
+      <table class="table" id="tablaDetalle">
+        <thead>
+          <tr>
+            <th>Nº Parada</th>
+            <th>Localidad</th>
+            <th>Intervalo desde salida</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyDetalle"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/Detalle.js"></script>
+</body>
+</html>

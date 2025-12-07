@@ -1,0 +1,32 @@
+<!-- Ejercicio 34
+     Lee una cadena, la separa en palabras con split()
+     y muestra información en una ventana nueva. -->
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Ejercicio 34</title>
+</head>
+<body>
+<script>
+  let texto = prompt("Introduce un texto:");
+  let palabras = texto.trim().split(/\s+/);
+
+  let numPal = palabras.length;
+  let primera = palabras[0];
+  let ultima = palabras[palabras.length - 1];
+  let inverso = palabras.slice().reverse();
+  let az = palabras.slice().sort((a,b)=>a.localeCompare(b));
+  let za = palabras.slice().sort((a,b)=>b.localeCompare(a));
+
+  let nueva = window.open("", "_blank", "width=600,height=400");
+  nueva.document.write("<h2>Info del texto</h2>");
+  nueva.document.write("Número de palabras: " + numPal + "<br>");
+  nueva.document.write("Primera palabra: " + primera + "<br>");
+  nueva.document.write("Última palabra: " + ultima + "<br>");
+  nueva.document.write("Inverso: " + inverso.join(" ") + "<br>");
+  nueva.document.write("Orden A-Z: " + az.join(" ") + "<br>");
+  nueva.document.write("Orden Z-A: " + za.join(" ") + "<br>");
+</script>
+</body>
+</html>
