@@ -161,12 +161,6 @@ function ensureUnknownGenre() {
   }
 }
 
-/* =========================================================
-   ✅ SEED INICIAL (PDF)
-   - Si no hay películas ni géneros reales, mete:
-     4 géneros + 5 Star Wars
-   - No pisa datos existentes
-========================================================= */
 function initStarWarsSeedIfEmpty() {
   ensureUnknownGenre();
 
