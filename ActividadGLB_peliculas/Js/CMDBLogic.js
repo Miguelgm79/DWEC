@@ -12,11 +12,7 @@
  *
  * @author
  * Miguel Garcia
-<<<<<<< HEAD
- * @version 1.0.0
-=======
  * @version 1.0.1
->>>>>>> 341ab2e (Proyecto js)
  */
 
 /**
@@ -51,15 +47,9 @@ const OLD_MOVIES_KEY = "cmdb_movies";
  * @property {string} releaseDate - Fecha YYYY-MM-DD.
  * @property {number} popularity - Popularidad 0..100.
  * @property {number[]} genres - IDs de géneros asociados.
-<<<<<<< HEAD
- * @property {number[]} ratings - Valoraciones 1..10.
- * @property {number} votes - Total de votos.
- * @property {string} score - Media de valoraciones con 2 decimales.
-=======
  * @property {number[]} puntuaciones - Valoraciones 0..10.
  * @property {number} votes - Total de votos.
  * @property {string} score - Media redondeada sin decimales.
->>>>>>> 341ab2e (Proyecto js)
  */
 
 /**
@@ -105,11 +95,8 @@ function saveGenres(genres) {
 
 /**
  * Recupera el array de películas desde LocalStorage.
-<<<<<<< HEAD
-=======
  * ✅ Migra ratings -> puntuaciones
  * ✅ Recalcula siempre votes y score a partir de puntuaciones
->>>>>>> 341ab2e (Proyecto js)
  *
  * @returns {Movie[]} Lista de películas.
  */
@@ -268,7 +255,6 @@ function addOrUpdateGenreLogic(name, idEditing = null) {
 
   const genres = getGenres();
 
-  // Duplicados (permitiendo el mismo si es el que editas)
   const dup = genres.some(g =>
     g.name.toLowerCase() === cleanName.toLowerCase() &&
     g.id !== idEditing
@@ -313,12 +299,7 @@ function deleteGenreLogic(id) {
 }
 
 /**
- * Valida datos de una película según criterios:
- * a) ID válido
- * b) Título correcto (1..100 chars)
- * c) Fecha entre 01/01/1900 y hoy
- * d) Popularidad 0..100
- * e) Géneros existentes
+ * Valida datos de una película según criterios.
  *
  * @param {{id:number|null,title:string,releaseDate:string,popularity:number,genres:number[]}} movie
  * @returns {string|null} Mensaje de error o null si ok.
@@ -347,7 +328,6 @@ function validateMovieInput(movie) {
     return "La popularidad debe estar entre 0 y 100.";
   }
 
-  // géneros deben existir
   const allGenres = getGenres().map(g => g.id);
   const invalid = genres.some(gid => !allGenres.includes(gid));
   if (invalid) return "Hay géneros seleccionados que no existen.";
@@ -412,11 +392,7 @@ function deleteMovieLogic(id) {
  * Añade una valoración a una película y recalcula score/votos.
  *
  * @param {number} id - ID de la película.
-<<<<<<< HEAD
- * @param {number} rating - Valoración entera entre 1 y 10.
-=======
  * @param {number} rating - Valoración entera entre 0 y 10.
->>>>>>> 341ab2e (Proyecto js)
  * @returns {{ok:boolean,msg?:string}} Resultado.
  */
 function rateMovieLogic(id, rating) {
@@ -424,7 +400,6 @@ function rateMovieLogic(id, rating) {
   const movie = movies.find(m => m.id === id);
   if (!movie) return { ok: false, msg: "Película no encontrada." };
 
-  // ✅ rating válido 0..10
   if (!Number.isInteger(rating) || rating < 0 || rating > 10) {
     return { ok: false, msg: "La valoración debe ser un entero entre 0 y 10." };
   }
@@ -434,34 +409,17 @@ function rateMovieLogic(id, rating) {
 
   movie.votes = movie.puntuaciones.length;
   const avg = movie.puntuaciones.reduce((a, b) => a + b, 0) / movie.votes;
-  movie.score = String(Math.round(avg)); // sin decimales
+  movie.score = String(Math.round(avg));
 
   saveMovies(movies);
   return { ok: true };
 }
 
-<<<<<<< HEAD
-/**
- * API pública expuesta para la capa de UI (app.js).
- * @type {{
- *  getGenres: function():Genre[],
- *  saveGenres: function(Genre[]):void,
- *  getMovies: function():Movie[],
- *  saveMovies: function(Movie[]):void,
- *  ensureUnknownGenre: function():void,
- *  addOrUpdateGenreLogic: function(string, (number|null)=):{ok:boolean,msg?:string},
- *  deleteGenreLogic: function(number):{ok:boolean,msg?:string},
- *  saveOrUpdateMovieLogic: function(Object):{ok:boolean,msg?:string},
- *  deleteMovieLogic: function(number):{ok:boolean,msg?:string},
- *  rateMovieLogic: function(number, number):{ok:boolean,msg?:string}
- * }}
-=======
 /* ✅ Ejecutar seed al cargar lógica */
 initStarWarsSeedIfEmpty();
 
 /**
  * API pública expuesta para la capa de UI (app.js).
->>>>>>> 341ab2e (Proyecto js)
  */
 window.CMDBLogic = {
   getGenres, saveGenres,

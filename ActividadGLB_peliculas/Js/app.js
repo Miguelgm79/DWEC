@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /**
  * @file app.js
  * @description
@@ -13,7 +12,7 @@
  *
  * @author 
  * Miguel Garcia
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 /**
@@ -31,9 +30,9 @@
  * @property {string} releaseDate - Fecha de estreno en formato YYYY-MM-DD.
  * @property {number} popularity - Popularidad entre 0 y 100.
  * @property {number[]} genres - IDs de géneros asociados.
- * @property {number[]} ratings - Lista de valoraciones (1..10).
+ * @property {number[]} puntuaciones - Lista de valoraciones (0..10).
  * @property {number} votes - Número total de votos.
- * @property {string|number} score - Media de votos con 2 decimales.
+ * @property {string|number} score - Media redondeada sin decimales.
  */
 
 /**
@@ -58,21 +57,11 @@
  * @returns {void}
  */
 document.addEventListener("DOMContentLoaded", () => {
-=======
-document.addEventListener("DOMContentLoaded", () => {
   // asegura género desconocido si existe lógica
->>>>>>> 341ab2e (Proyecto js)
   if (window.CMDBLogic?.ensureUnknownGenre) {
     CMDBLogic.ensureUnknownGenre();
   }
 
-<<<<<<< HEAD
-  if (document.getElementById("genreForm")) initGenresPage();
-  if (document.getElementById("movieForm")) initMoviesPage();
-
-  // ✅ solo listado si NO es CRUD
-  if (document.getElementById("moviesTable") && !document.getElementById("movieForm")) {
-=======
   // Página de géneros
   if (document.getElementById("genreForm")) {
     initGenresPage();
@@ -83,31 +72,31 @@ document.addEventListener("DOMContentLoaded", () => {
     initMoviesPage();
   }
 
-  // Listado votar (listado.html) => SOLO si NO estamos en CRUD
+  // ✅ solo listado si NO es CRUD
   if (
     document.getElementById("moviesTable") &&
     !document.getElementById("movieForm")
   ) {
->>>>>>> 341ab2e (Proyecto js)
     initListadoPage();
   }
 });
 
-<<<<<<< HEAD
-/* ============================
-   GÉNEROS
-============================ */
-=======
 /* ============================ UTILS ============================ */
 
+/**
+ * Convierte una fecha YYYY-MM-DD a DD/MM/AAAA.
+ * @param {string} iso
+ * @returns {string}
+ */
 function formatDate(iso) {
   if (!iso) return "-";
   const [y, m, d] = iso.split("-");
   return `${d}/${m}/${y}`;
 }
 
-/* ============================ GÉNEROS ============================ */
->>>>>>> 341ab2e (Proyecto js)
+/* ============================
+   GÉNEROS
+============================ */
 
 /**
  * Inicializa la página de géneros:
@@ -235,13 +224,9 @@ function listGenres() {
   fillGenresSelect();
 }
 
-<<<<<<< HEAD
 /* ============================
    PELÍCULAS (CRUD)
 ============================ */
-=======
-/* ============================ PELÍCULAS (CRUD) ============================ */
->>>>>>> 341ab2e (Proyecto js)
 
 /**
  * Inicializa la página CRUD de películas:
@@ -268,20 +253,13 @@ function initMoviesPage() {
   document.getElementById("newMovie")
     .addEventListener("click", clearMovieForm);
 
-<<<<<<< HEAD
-=======
   // Seleccionar fila para editar/eliminar
->>>>>>> 341ab2e (Proyecto js)
   const tableBody = document.getElementById("moviesTable");
   tableBody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr");
     if (!tr) return;
 
     const movieId = parseInt(tr.dataset.id);
-<<<<<<< HEAD
-    /** @type {Movie|undefined} */
-=======
->>>>>>> 341ab2e (Proyecto js)
     const movie = CMDBLogic.getMovies().find(m => m.id === movieId);
     if (movie) loadMovieIntoForm(movie);
   });
@@ -324,7 +302,7 @@ function loadMovieIntoForm(movie) {
 
   const sel = document.getElementById("movieGenres");
   Array.from(sel.options).forEach(opt => {
-    opt.selected = movie.genres.includes(parseInt(opt.value));
+    opt.selected = (movie.genres || []).includes(parseInt(opt.value));
   });
 }
 
@@ -413,43 +391,14 @@ function deleteMovie() {
   listMovies(false);
 }
 
-<<<<<<< HEAD
 /**
  * Renderiza la tabla de películas.
  *
- * - withVotes=false: modo CRUD (sin votar, muestra géneros).
- * - withVotes=true : modo listado (muestra input + botón votar).
+ * - withVotes=false: modo CRUD.
+ * - withVotes=true : modo listado votar (PDF).
  *
  * @param {boolean} [withVotes=false] - Activa el modo votación.
  * @returns {void}
-=======
-function clearMovieForm() {
-  document.getElementById("movieId").value = "";
-  document.getElementById("movieTitle").value = "";
-  document.getElementById("movieReleaseDate").value = "";
-  document.getElementById("moviePopularity").value = "";
-
-  const sel = document.getElementById("movieGenres");
-  Array.from(sel.options).forEach(o => o.selected = false);
-}
-
-function loadMovieIntoForm(movie) {
-  document.getElementById("movieId").value = movie.id;
-  document.getElementById("movieTitle").value = movie.title;
-  document.getElementById("movieReleaseDate").value = movie.releaseDate || "";
-  document.getElementById("moviePopularity").value = movie.popularity ?? "";
-
-  const sel = document.getElementById("movieGenres");
-  Array.from(sel.options).forEach(opt => {
-    opt.selected = (movie.genres || []).includes(parseInt(opt.value));
-  });
-}
-
-/**
- * Lista películas.
- * withVotes = false -> modo CRUD (peliculas.html)
- * withVotes = true  -> modo listado votar (listado.html)
->>>>>>> 341ab2e (Proyecto js)
  */
 function listMovies(withVotes = false) {
   const table = document.getElementById("moviesTable");
@@ -460,11 +409,8 @@ function listMovies(withVotes = false) {
   /** @type {Genre[]} */
   const genres = CMDBLogic.getGenres();
 
-<<<<<<< HEAD
   table.innerHTML = "";
 
-=======
->>>>>>> 341ab2e (Proyecto js)
   movies.forEach(movie => {
     const movieGenres = (movie.genres || [])
       .map(gid => genres.find(g => g.id === gid)?.name)
@@ -480,28 +426,21 @@ function listMovies(withVotes = false) {
         <td>${movie.title}</td>
         <td>${formatDate(movie.releaseDate)}</td>
         <td>${movie.popularity ?? "-"}</td>
-<<<<<<< HEAD
-        <td>${movie.score || "0.00"}</td>
-        <td>
-          <input type="number" min="1" max="10" step="1" id="rating-${movie.id}">
-=======
         <td>${movie.score ?? "0"}</td>
         <td>${movie.votes || 0}</td>
         <td>${movieGenres || "-"}</td>
         <td class="vote-cell">
           <input type="number" min="0" max="10" step="1" id="rating-${movie.id}">
->>>>>>> 341ab2e (Proyecto js)
           <button type="button" class="btn-rate-movie">Votar</button>
         </td>
       `;
     } else {
-      // ✅ CRUD (como lo tenías)
+      // ✅ CRUD
       tr.innerHTML = `
         <td>${movie.id}</td>
         <td>${movie.title}</td>
         <td>${formatDate(movie.releaseDate)}</td>
         <td>${movie.popularity ?? "-"}</td>
-        <td>${movie.score || "0.00"}</td>
         <td>${movieGenres || "-"}</td>
       `;
     }
@@ -524,6 +463,7 @@ function listMovies(withVotes = false) {
 function initListadoPage() {
   const tableBody = document.getElementById("moviesTable");
 
+  // delegación robusta con closest
   tableBody.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn-rate-movie");
     if (!btn) return;
@@ -538,29 +478,22 @@ function initListadoPage() {
   listMovies(true);
 }
 
-<<<<<<< HEAD
 /**
  * Envía una valoración a CMDBLogic y refresca la tabla.
  *
  * @param {number} id - ID de la película a valorar.
  * @returns {void}
  */
-=======
-
->>>>>>> 341ab2e (Proyecto js)
 function rateMovie(id) {
   const input = document.getElementById(`rating-${id}`);
   const rating = parseInt(input.value);
 
-<<<<<<< HEAD
-  /** @type {LogicResult} */
-=======
   if (Number.isNaN(rating)) {
     alert("Introduce una valoración entre 0 y 10.");
     return;
   }
 
->>>>>>> 341ab2e (Proyecto js)
+  /** @type {LogicResult} */
   const res = CMDBLogic.rateMovieLogic(id, rating);
   if (!res.ok) {
     alert(res.msg);
