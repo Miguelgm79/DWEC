@@ -15,29 +15,42 @@
   <main class="container">
 
     <form id="movieForm" class="form-card" onsubmit="return false;">
+
+  <div class="form-grid">
+    <div class="form-field">
       <label for="movieId">ID</label>
       <input type="text" id="movieId" placeholder="(autogenerado)" readonly>
+    </div>
 
-      <label for="movieTitle">Título</label>s
+    <div class="form-field form-field-wide">
+      <label for="movieTitle">Título</label>
       <input type="text" id="movieTitle" maxlength="100" required>
+    </div>
 
+    <div class="form-field">
       <label for="movieReleaseDate">Fecha de estreno</label>
       <input type="date" id="movieReleaseDate">
+      <small class="hint">Formato automático</small>
+    </div>
 
+    <div class="form-field">
       <label for="moviePopularity">Popularidad (0-100)</label>
-      <input type="number" id="moviePopularity" min="0" max="100" required>
-      
-      
+      <input type="number" id="moviePopularity" min="0" max="100" required placeholder="0 a 100">
+      <small class="hint">Número entre 0 y 100</small>
+    </div>
 
+    <div class="form-field form-field-wide">
       <label for="movieGenres">Géneros</label>
       <select id="movieGenres" multiple size="6"></select>
+    </div>
+  </div>
 
-      <div class="btn-row">
-        <button id="saveMovie" type="button">Guardar</button>
-        <button id="deleteMovie" type="button">Eliminar</button>
-        <button id="newMovie" type="button">Nuevo</button>
-      </div>
-    </form>
+  <div class="btn-row">
+    <button id="saveMovie" type="button">Guardar</button>
+    <button id="deleteMovie" type="button">Eliminar</button>
+    <button id="newMovie" type="button">Nuevo</button>
+  </div>
+</form>
 
     <h2>Listado de películas</h2>
     <table class="data-table">

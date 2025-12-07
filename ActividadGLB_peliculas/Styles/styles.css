@@ -91,11 +91,8 @@ button.secondary {
   border-radius:12px;
   text-decoration:none;
   font-size:1.2rem;
-  box-shadow:0 2px 8px rgba(0,0,0,.08);
-  transition:.15s;
   color:inherit;
 }
-.menu-card:hover{ transform:translateY(-2px); }
 
 /* ============================
    TOPBAR PÁGINAS INTERNAS
@@ -116,3 +113,77 @@ button.secondary {
 }
 
 .help{ opacity:.75; font-size:.9rem; }
+
+/* ============================
+   FORMULARIO PELÍCULAS (CLARO)
+============================ */
+
+.form-card{
+  background:#fff;
+  padding:1.2rem 1.4rem;
+  border-radius:12px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  margin-bottom:1.5rem;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns: 160px 1fr 1fr;
+  gap:1rem 1.2rem;
+  align-items:end;
+}
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:.35rem;
+}
+
+.form-field-wide{
+  grid-column: span 2;
+}
+
+.form-field label{
+  font-weight:700;
+  font-size:.95rem;
+}
+
+.form-field input,
+.form-field select{
+  padding:.55rem .7rem;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:1rem;
+  background:#fff;
+}
+
+.form-field input:focus,
+.form-field select:focus{
+  outline:none;
+  border-color:#222;
+  box-shadow:0 0 0 3px rgba(0,0,0,.08);
+}
+
+.form-field input[readonly]{
+  background:#f2f2f2;
+  color:#666;
+}
+
+.hint{
+  font-size:.8rem;
+  color:#666;
+  margin-top:-.1rem;
+}
+
+.btn-row{
+  display:flex;
+  gap:.6rem;
+  margin-top:1.2rem;
+  flex-wrap:wrap;
+}
+
+.btn-row button{
+  min-width:120px;
+}
+
+
