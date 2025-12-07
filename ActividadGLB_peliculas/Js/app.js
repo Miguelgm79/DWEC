@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /**
  * @file app.js
  * @description
@@ -57,22 +58,56 @@
  * @returns {void}
  */
 document.addEventListener("DOMContentLoaded", () => {
+=======
+document.addEventListener("DOMContentLoaded", () => {
+  // asegura género desconocido si existe lógica
+>>>>>>> 341ab2e (Proyecto js)
   if (window.CMDBLogic?.ensureUnknownGenre) {
     CMDBLogic.ensureUnknownGenre();
   }
 
+<<<<<<< HEAD
   if (document.getElementById("genreForm")) initGenresPage();
   if (document.getElementById("movieForm")) initMoviesPage();
 
   // ✅ solo listado si NO es CRUD
   if (document.getElementById("moviesTable") && !document.getElementById("movieForm")) {
+=======
+  // Página de géneros
+  if (document.getElementById("genreForm")) {
+    initGenresPage();
+  }
+
+  // CRUD de películas (peliculas.html)
+  if (document.getElementById("movieForm")) {
+    initMoviesPage();
+  }
+
+  // Listado votar (listado.html) => SOLO si NO estamos en CRUD
+  if (
+    document.getElementById("moviesTable") &&
+    !document.getElementById("movieForm")
+  ) {
+>>>>>>> 341ab2e (Proyecto js)
     initListadoPage();
   }
 });
 
+<<<<<<< HEAD
 /* ============================
    GÉNEROS
 ============================ */
+=======
+/* ============================ UTILS ============================ */
+
+function formatDate(iso) {
+  if (!iso) return "-";
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+/* ============================ GÉNEROS ============================ */
+>>>>>>> 341ab2e (Proyecto js)
 
 /**
  * Inicializa la página de géneros:
@@ -200,9 +235,13 @@ function listGenres() {
   fillGenresSelect();
 }
 
+<<<<<<< HEAD
 /* ============================
    PELÍCULAS (CRUD)
 ============================ */
+=======
+/* ============================ PELÍCULAS (CRUD) ============================ */
+>>>>>>> 341ab2e (Proyecto js)
 
 /**
  * Inicializa la página CRUD de películas:
@@ -229,13 +268,20 @@ function initMoviesPage() {
   document.getElementById("newMovie")
     .addEventListener("click", clearMovieForm);
 
+<<<<<<< HEAD
+=======
+  // Seleccionar fila para editar/eliminar
+>>>>>>> 341ab2e (Proyecto js)
   const tableBody = document.getElementById("moviesTable");
   tableBody.addEventListener("click", (e) => {
     const tr = e.target.closest("tr");
     if (!tr) return;
 
     const movieId = parseInt(tr.dataset.id);
+<<<<<<< HEAD
     /** @type {Movie|undefined} */
+=======
+>>>>>>> 341ab2e (Proyecto js)
     const movie = CMDBLogic.getMovies().find(m => m.id === movieId);
     if (movie) loadMovieIntoForm(movie);
   });
@@ -367,6 +413,7 @@ function deleteMovie() {
   listMovies(false);
 }
 
+<<<<<<< HEAD
 /**
  * Renderiza la tabla de películas.
  *
@@ -375,6 +422,34 @@ function deleteMovie() {
  *
  * @param {boolean} [withVotes=false] - Activa el modo votación.
  * @returns {void}
+=======
+function clearMovieForm() {
+  document.getElementById("movieId").value = "";
+  document.getElementById("movieTitle").value = "";
+  document.getElementById("movieReleaseDate").value = "";
+  document.getElementById("moviePopularity").value = "";
+
+  const sel = document.getElementById("movieGenres");
+  Array.from(sel.options).forEach(o => o.selected = false);
+}
+
+function loadMovieIntoForm(movie) {
+  document.getElementById("movieId").value = movie.id;
+  document.getElementById("movieTitle").value = movie.title;
+  document.getElementById("movieReleaseDate").value = movie.releaseDate || "";
+  document.getElementById("moviePopularity").value = movie.popularity ?? "";
+
+  const sel = document.getElementById("movieGenres");
+  Array.from(sel.options).forEach(opt => {
+    opt.selected = (movie.genres || []).includes(parseInt(opt.value));
+  });
+}
+
+/**
+ * Lista películas.
+ * withVotes = false -> modo CRUD (peliculas.html)
+ * withVotes = true  -> modo listado votar (listado.html)
+>>>>>>> 341ab2e (Proyecto js)
  */
 function listMovies(withVotes = false) {
   const table = document.getElementById("moviesTable");
@@ -385,10 +460,13 @@ function listMovies(withVotes = false) {
   /** @type {Genre[]} */
   const genres = CMDBLogic.getGenres();
 
+<<<<<<< HEAD
   table.innerHTML = "";
 
+=======
+>>>>>>> 341ab2e (Proyecto js)
   movies.forEach(movie => {
-    const movieGenres = movie.genres
+    const movieGenres = (movie.genres || [])
       .map(gid => genres.find(g => g.id === gid)?.name)
       .filter(Boolean)
       .join(", ");
@@ -397,22 +475,31 @@ function listMovies(withVotes = false) {
     tr.dataset.id = movie.id;
 
     if (withVotes) {
+      // ✅ LISTADO VOTAR (7 columnas exactas del PDF)
       tr.innerHTML = `
-        <td>${movie.id}</td>
         <td>${movie.title}</td>
-        <td>${movie.releaseDate || "-"}</td>
+        <td>${formatDate(movie.releaseDate)}</td>
         <td>${movie.popularity ?? "-"}</td>
+<<<<<<< HEAD
         <td>${movie.score || "0.00"}</td>
         <td>
           <input type="number" min="1" max="10" step="1" id="rating-${movie.id}">
+=======
+        <td>${movie.score ?? "0"}</td>
+        <td>${movie.votes || 0}</td>
+        <td>${movieGenres || "-"}</td>
+        <td class="vote-cell">
+          <input type="number" min="0" max="10" step="1" id="rating-${movie.id}">
+>>>>>>> 341ab2e (Proyecto js)
           <button type="button" class="btn-rate-movie">Votar</button>
         </td>
       `;
     } else {
+      // ✅ CRUD (como lo tenías)
       tr.innerHTML = `
         <td>${movie.id}</td>
         <td>${movie.title}</td>
-        <td>${movie.releaseDate || "-"}</td>
+        <td>${formatDate(movie.releaseDate)}</td>
         <td>${movie.popularity ?? "-"}</td>
         <td>${movie.score || "0.00"}</td>
         <td>${movieGenres || "-"}</td>
@@ -438,9 +525,10 @@ function initListadoPage() {
   const tableBody = document.getElementById("moviesTable");
 
   tableBody.addEventListener("click", (e) => {
-    if (!e.target.classList.contains("btn-rate-movie")) return;
+    const btn = e.target.closest(".btn-rate-movie");
+    if (!btn) return;
 
-    const tr = e.target.closest("tr");
+    const tr = btn.closest("tr");
     if (!tr) return;
 
     const id = parseInt(tr.dataset.id);
@@ -450,17 +538,29 @@ function initListadoPage() {
   listMovies(true);
 }
 
+<<<<<<< HEAD
 /**
  * Envía una valoración a CMDBLogic y refresca la tabla.
  *
  * @param {number} id - ID de la película a valorar.
  * @returns {void}
  */
+=======
+
+>>>>>>> 341ab2e (Proyecto js)
 function rateMovie(id) {
   const input = document.getElementById(`rating-${id}`);
   const rating = parseInt(input.value);
 
+<<<<<<< HEAD
   /** @type {LogicResult} */
+=======
+  if (Number.isNaN(rating)) {
+    alert("Introduce una valoración entre 0 y 10.");
+    return;
+  }
+
+>>>>>>> 341ab2e (Proyecto js)
   const res = CMDBLogic.rateMovieLogic(id, rating);
   if (!res.ok) {
     alert(res.msg);

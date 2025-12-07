@@ -12,7 +12,11 @@
  *
  * @author
  * Miguel Garcia
+<<<<<<< HEAD
  * @version 1.0.0
+=======
+ * @version 1.0.1
+>>>>>>> 341ab2e (Proyecto js)
  */
 
 /**
@@ -47,9 +51,15 @@ const OLD_MOVIES_KEY = "cmdb_movies";
  * @property {string} releaseDate - Fecha YYYY-MM-DD.
  * @property {number} popularity - Popularidad 0..100.
  * @property {number[]} genres - IDs de géneros asociados.
+<<<<<<< HEAD
  * @property {number[]} ratings - Valoraciones 1..10.
  * @property {number} votes - Total de votos.
  * @property {string} score - Media de valoraciones con 2 decimales.
+=======
+ * @property {number[]} puntuaciones - Valoraciones 0..10.
+ * @property {number} votes - Total de votos.
+ * @property {string} score - Media redondeada sin decimales.
+>>>>>>> 341ab2e (Proyecto js)
  */
 
 /**
@@ -95,12 +105,47 @@ function saveGenres(genres) {
 
 /**
  * Recupera el array de películas desde LocalStorage.
+<<<<<<< HEAD
+=======
+ * ✅ Migra ratings -> puntuaciones
+ * ✅ Recalcula siempre votes y score a partir de puntuaciones
+>>>>>>> 341ab2e (Proyecto js)
  *
  * @returns {Movie[]} Lista de películas.
  */
 function getMovies() {
   migrateOldKeysIfNeeded();
-  return JSON.parse(localStorage.getItem(MOVIES_KEY)) || [];
+  const movies = JSON.parse(localStorage.getItem(MOVIES_KEY)) || [];
+
+  let changed = false;
+
+  movies.forEach(m => {
+    // ✅ migración automática ratings -> puntuaciones
+    if (!m.puntuaciones && m.ratings) {
+      m.puntuaciones = m.ratings;
+      delete m.ratings;
+      changed = true;
+    }
+
+    if (!Array.isArray(m.puntuaciones)) {
+      m.puntuaciones = [];
+      changed = true;
+    }
+
+    // ✅ recalcular siempre votos y puntuación desde puntuaciones
+    m.votes = m.puntuaciones.length;
+
+    if (m.votes > 0) {
+      const avg = m.puntuaciones.reduce((a, b) => a + b, 0) / m.votes;
+      m.score = String(Math.round(avg)); // sin decimales
+    } else {
+      m.score = "0";
+    }
+  });
+
+  if (changed) saveMovies(movies);
+
+  return movies;
 }
 
 /**
@@ -127,6 +172,87 @@ function ensureUnknownGenre() {
     genres.push({ id: newId, name: "género desconocido" });
     saveGenres(genres);
   }
+}
+
+/* =========================================================
+   ✅ SEED INICIAL (PDF)
+   - Si no hay películas ni géneros reales, mete:
+     4 géneros + 5 Star Wars
+   - No pisa datos existentes
+========================================================= */
+function initStarWarsSeedIfEmpty() {
+  ensureUnknownGenre();
+
+  const existingMovies = getMovies();
+  const existingGenres = getGenres();
+
+  if (existingMovies.length > 0 || existingGenres.length > 1) return;
+
+  const genreNames = ["Acción", "Ciencia ficción", "Aventura", "Fantasía"];
+  let genres = getGenres();
+
+  function getOrCreateGenreId(name) {
+    let g = genres.find(x => x.name.toLowerCase() === name.toLowerCase());
+    if (!g) {
+      const newId = genres.length
+        ? Math.max(...genres.map(x => x.id)) + 1
+        : 1;
+      g = { id: newId, name };
+      genres.push(g);
+    }
+    return g.id;
+  }
+
+  const genreIds = {};
+  genreNames.forEach(n => (genreIds[n] = getOrCreateGenreId(n)));
+  saveGenres(genres);
+
+  const starWarsMovies = [
+    {
+      title: "Star Wars: Episodio I - La amenaza fantasma",
+      releaseDate: "1999-05-19",
+      popularity: 78.5,
+      genres: [genreIds["Acción"], genreIds["Ciencia ficción"], genreIds["Aventura"]]
+    },
+    {
+      title: "Star Wars: Episodio II - El ataque de los clones",
+      releaseDate: "2002-05-16",
+      popularity: 74.2,
+      genres: [genreIds["Acción"], genreIds["Ciencia ficción"], genreIds["Aventura"]]
+    },
+    {
+      title: "Star Wars: Episodio III - La venganza de los Sith",
+      releaseDate: "2005-05-19",
+      popularity: 86.9,
+      genres: [genreIds["Acción"], genreIds["Ciencia ficción"], genreIds["Aventura"], genreIds["Fantasía"]]
+    },
+    {
+      title: "Star Wars: Episodio IV - Una nueva esperanza",
+      releaseDate: "1977-05-25",
+      popularity: 95.0,
+      genres: [genreIds["Acción"], genreIds["Ciencia ficción"], genreIds["Aventura"], genreIds["Fantasía"]]
+    },
+    {
+      title: "Star Wars: Episodio V - El Imperio contraataca",
+      releaseDate: "1980-05-21",
+      popularity: 98.0,
+      genres: [genreIds["Acción"], genreIds["Ciencia ficción"], genreIds["Aventura"]]
+    }
+  ];
+
+  let nextId = 1;
+  const movies = starWarsMovies.map(m => ({
+    id: nextId++,
+    title: m.title,
+    releaseDate: m.releaseDate,
+    popularity: m.popularity,
+    genres: m.genres,
+    puntuaciones: [],
+    votes: 0,
+    score: "0"
+  }));
+
+  saveMovies(movies);
 }
 
 /**
@@ -170,7 +296,9 @@ function addOrUpdateGenreLogic(name, idEditing = null) {
  */
 function deleteGenreLogic(id) {
   const movies = getMovies();
-  const usedInMovies = movies.some(m => m.genres.includes(id));
+
+  // ✅ fix defensivo por si m.genres es undefined
+  const usedInMovies = movies.some(m => (m.genres || []).includes(id));
 
   if (usedInMovies) {
     return {
@@ -247,9 +375,9 @@ function saveOrUpdateMovieLogic(data) {
       releaseDate: data.releaseDate,
       popularity: data.popularity,
       genres: data.genres,
-      ratings: [],
+      puntuaciones: [],
       votes: 0,
-      score: "0.00"
+      score: "0"
     });
   } else {
     const idx = movies.findIndex(m => m.id === data.id);
@@ -284,7 +412,11 @@ function deleteMovieLogic(id) {
  * Añade una valoración a una película y recalcula score/votos.
  *
  * @param {number} id - ID de la película.
+<<<<<<< HEAD
  * @param {number} rating - Valoración entera entre 1 y 10.
+=======
+ * @param {number} rating - Valoración entera entre 0 y 10.
+>>>>>>> 341ab2e (Proyecto js)
  * @returns {{ok:boolean,msg?:string}} Resultado.
  */
 function rateMovieLogic(id, rating) {
@@ -292,20 +424,23 @@ function rateMovieLogic(id, rating) {
   const movie = movies.find(m => m.id === id);
   if (!movie) return { ok: false, msg: "Película no encontrada." };
 
-  if (!Number.isInteger(rating) || rating < 1 || rating > 10) {
-    return { ok: false, msg: "La valoración debe ser un entero entre 1 y 10." };
+  // ✅ rating válido 0..10
+  if (!Number.isInteger(rating) || rating < 0 || rating > 10) {
+    return { ok: false, msg: "La valoración debe ser un entero entre 0 y 10." };
   }
 
-  movie.ratings.push(rating);
-  movie.votes = movie.ratings.length;
-  movie.score = (
-    movie.ratings.reduce((a, b) => a + b, 0) / movie.votes
-  ).toFixed(2);
+  if (!Array.isArray(movie.puntuaciones)) movie.puntuaciones = [];
+  movie.puntuaciones.push(rating);
+
+  movie.votes = movie.puntuaciones.length;
+  const avg = movie.puntuaciones.reduce((a, b) => a + b, 0) / movie.votes;
+  movie.score = String(Math.round(avg)); // sin decimales
 
   saveMovies(movies);
   return { ok: true };
 }
 
+<<<<<<< HEAD
 /**
  * API pública expuesta para la capa de UI (app.js).
  * @type {{
@@ -320,11 +455,20 @@ function rateMovieLogic(id, rating) {
  *  deleteMovieLogic: function(number):{ok:boolean,msg?:string},
  *  rateMovieLogic: function(number, number):{ok:boolean,msg?:string}
  * }}
+=======
+/* ✅ Ejecutar seed al cargar lógica */
+initStarWarsSeedIfEmpty();
+
+/**
+ * API pública expuesta para la capa de UI (app.js).
+>>>>>>> 341ab2e (Proyecto js)
  */
 window.CMDBLogic = {
   getGenres, saveGenres,
   getMovies, saveMovies,
   ensureUnknownGenre,
+  initStarWarsSeedIfEmpty,
+
   addOrUpdateGenreLogic,
   deleteGenreLogic,
   saveOrUpdateMovieLogic,
