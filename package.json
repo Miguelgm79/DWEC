@@ -1,0 +1,21 @@
+{
+  "name": "dwec",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Ejer1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miguelgm79/DWEC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Miguelgm79/DWEC/issues"
+  },
+  "homepage": "https://github.com/Miguelgm79/DWEC#readme"
+}
