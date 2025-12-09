@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AVILESA - Paradas</title>
+  <link rel="stylesheet" href="styles/Styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>Gestión de paradas</h1>
+    <nav class="nav">
+      <a href="index.html">Inicio</a>
+      <a href="Lineas.html">Líneas</a>
+      <a href="Detalle.html">Detalle</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2 id="form-title-parada">Alta / Modificación de parada</h2>
+
+      <form id="form-parada" autocomplete="off">
+        <div class="form-row">
+          <label for="numeroParada">Número de parada</label>
+          <input id="numeroParada" type="number" min="1" required />
+        </div>
+
+        <div class="form-row">
+          <label for="numeroLineaParada">Número de línea</label>
+          <select id="numeroLineaParada" required>
+            <option value="">-- Selecciona línea --</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label for="localidadParada">Localidad</label>
+          <input id="localidadParada" type="text" required />
+        </div>
+
+        <div class="form-row">
+          <label for="intervaloParada">Intervalo desde salida (HH:MM)</label>
+          <input id="intervaloParada" type="time" required />
+        </div>
+
+        <input id="modoEdicionParada" type="hidden" value="0" />
+        <input id="numeroParadaOriginal" type="hidden" value="" />
+
+        <div class="form-actions">
+          <button id="btnGuardarParada" type="submit">Guardar</button>
+          <button id="btnCancelarParada" type="button">Cancelar</button>
+        </div>
+
+        <p id="msgParada" class="msg"></p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Listado de paradas</h2>
+
+      <div class="form-row">
+        <label for="filtroLineaParadas">Filtrar por línea</label>
+        <select id="filtroLineaParadas">
+          <option value="todas">Todas</option>
+        </select>
+      </div>
+
+      <table class="table" id="tablaParadas">
+        <thead>
+          <tr>
+            <th>Nº Parada</th>
+            <th>Nº Línea</th>
+            <th>Localidad</th>
+            <th>Intervalo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="tbodyParadas"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="js/Paradas.js"></script>
+</body>
+</html>
+ss
