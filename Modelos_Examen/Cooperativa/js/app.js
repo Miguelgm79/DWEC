@@ -30,7 +30,7 @@ class OperacionesSospechosa {
 function cogerDatos() {
 
   // Cogemos código
-  let id = document.getElementById("id").value.trim();
+  let id = parseInt(document.getElementById("id").value);
 
   // Cogemos nombre
   let nombre = document.getElementById("nombre").value.trim();
