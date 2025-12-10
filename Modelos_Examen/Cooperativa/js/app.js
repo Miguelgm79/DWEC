@@ -97,36 +97,30 @@ function modificarOperacion() {
   let datos = cogerDatos();
   if (datos == null) return;
 
-  let operacion = operacion.find(v => v.id == datos.id);
+  let op = operacion.find(v => v.id == datos.id);
 
-  // Si no existe, avisamos
-  if (!operacion) {
+  if (!op) {
     alert("Esa operacion no existe.");
     return;
   }
 
-  // Si existe, actualizamos los datos
-  operacion.nombre = datos.nombre;
-  operacion.producto = datos.producto;
-  operacion.tipo = datos.tipo;
-  operacion.cantidad = datos.cantidad;
+  op.nombre = datos.nombre;
+  op.producto = datos.producto;
+  op.tipo = datos.tipo;
+  op.cantidad = datos.cantidad;
 
-  // Miramos si estaba en sospechosos
-  let sospechoso = operacionesSospechosa.find(vr => vr.id_sos == operacion.id);
+  let sospechoso = operacionesSospechosa.find(vr => vr.id_sos == op.id);
 
-  // Si ahora es muy rentable y antes no estaba, lo añadimos
-  if (cantidad > 100 && !sospechoso) {
-    operacionesSospechosa.push(new OperacionesSospechosa(operacion.id, cantidad));
+  if (op.cantidad > 100 && !sospechoso) {
+    operacionesSospechosa.push(new OperacionesSospechosa(op.id, op.cantidad));
   }
 
-  // Si ahora ya no es muy rentable pero antes sí estaba, lo quitamos
-  if (cantidad <= 100 && sospechoso) {
+  if (op.cantidad <= 100 && sospechoso) {
     operacionesSospechosa = operacionesSospechosa.filter(
-      vr => vr.id_sos != operacion.id
+      vr => vr.id_sos != op.id
     );
   }
 
-  // Mensaje final
   mostrarMensaje("operacion modificada y guardada.");
 }
 
