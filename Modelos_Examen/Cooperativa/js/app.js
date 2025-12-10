@@ -138,16 +138,18 @@ function mostrarSospechoso() {
 
   // Creamos la tabla en HTML
   let html = "<table>";
-  html += "<tr><th>id</th><th>Cantidad</th></tr>";
+  html += "<tr><th>id</th><th>Nombre</th><th>Cantidad</th></tr>";
 
   // Recorremos los vuelos muy rentables
-  for (let v of operacionesSospechosa) {
+  for (let y of operacion) {
+    for (let v of operacionesSospechosa) {
     html += "<tr>";
     html += "<td>" + v.id_sos + "</td>";
+    html += "<td>" + y.nombre + "</td>";
     html += "<td>" + v.cantidad.toFixed(2) + "</td>";
     html += "</tr>";
   }
-
+  }
   // Cerramos tabla
   html += "</table>";
 
