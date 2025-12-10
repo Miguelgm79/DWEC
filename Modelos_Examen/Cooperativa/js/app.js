@@ -127,35 +127,38 @@ function modificarOperacion() {
 
 function mostrarSospechoso() {
 
-  // Cogemos el div donde pondremos la tabla
   let div = document.getElementById("tablaSospechoso");
 
-  // Si no hay vuelos muy rentables, mostramos texto
   if (operacionesSospechosa.length == 0) {
     div.innerHTML = "<p>No hay operaciones sospechosas.</p>";
     return;
   }
 
-  // Creamos la tabla en HTML
-  let html = "<table>";
-  html += "<tr><th>id</th><th>Nombre</th><th>Cantidad</th></tr>";
+  const tipoExcluido = "aporte"; // <-- el tipo que no quieres mostrar
 
-  // Recorremos los vuelos muy rentables
-  for (let y of operacion) {
-    for (let v of operacionesSospechosa) {
+  let html = "<table>";
+  html += "<tr><th>id</th><th>Nombre</th><th>Tipo</th><th>Cantidad</th></tr>";
+
+  for (let s of operacionesSospechosa) {
+    let op = operacion.find(o => o.id == s.id_sos);
+
+    if (!op) continue; // si no existe, saltamos
+
+    if (op.tipo === tipoExcluido) continue; // <-- aquí se excluye
+
     html += "<tr>";
-    html += "<td>" + v.id_sos + "</td>";
-    html += "<td>" + y.nombre + "</td>";
-    html += "<td>" + v.cantidad.toFixed(2) + "</td>";
+    html += "<td>" + s.id_sos + "</td>";
+    html += "<td>" + op.nombre + "</td>";
+    html += "<td>" + op.tipo + "</td>";
+    html += "<td>" + s.cantidad.toFixed(2) + "</td>";
     html += "</tr>";
   }
-  }
-  // Cerramos tabla
-  html += "</table>";
 
-  // Metemos la tabla dentro del div
+  html += "</table>";
   div.innerHTML = html;
 }
+
+
 
 function mostrarOperacion() {
 
