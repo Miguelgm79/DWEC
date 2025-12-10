@@ -98,7 +98,7 @@ function modificarOperacion() {
   if (datos == null) return;
 
   let op = operacion.find(v => v.id == datos.id);
-
+ 
   if (!op) {
     alert("Esa operacion no existe.");
     return;
