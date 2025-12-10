@@ -144,7 +144,7 @@ function mostrarSospechoso() {
 
     if (!op) continue; // si no existe, saltamos
 
-    if (op.tipo === tipoExcluido) continue; // <-- aquí se excluye
+    if (op.tipo === tipoExcluido) continue; // aquí se excluye
 
     html += "<tr>";
     html += "<td>" + s.id_sos + "</td>";
